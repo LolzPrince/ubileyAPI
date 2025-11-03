@@ -29,7 +29,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
     operations: [new GetCollection(openapi: new Operation(tags: ['Tables']))],
     uriVariables: [
         'id' => new Link(
-            fromProperty: 'guestLists',
+            fromProperty: 'guests',
             fromClass: Tables::class
         )
     ],
