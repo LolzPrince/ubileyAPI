@@ -25,7 +25,8 @@ use Symfony\Component\Serializer\Attribute\Groups;
         new GetCollection(uriTemplate: 'tables_stats', output: TablesStatsDto::class, provider: TablesStatsProvider::class)
     ],
     normalizationContext: ['groups' => ['tables:read', 'guests:read']],
-    denormalizationContext: ['groups' => ['tables:write']]
+    denormalizationContext: ['groups' => ['tables:write']],
+    paginationEnabled: false
 )]
 #[ORM\Entity(repositoryClass: TablesRepository::class)]
 class Tables

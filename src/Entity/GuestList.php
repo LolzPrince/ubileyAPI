@@ -22,7 +22,8 @@ use Symfony\Component\Serializer\Attribute\Groups;
         new GetCollection(),
         new Patch()],
     normalizationContext: ['groups' => ['guests:read']],
-    denormalizationContext: ['groups' => ['guests:write']]
+    denormalizationContext: ['groups' => ['guests:write']],
+    paginationEnabled: false
 )]
 #[ApiResource(
     uriTemplate: 'tables/{id}/guests',
