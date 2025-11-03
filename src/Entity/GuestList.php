@@ -34,6 +34,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
             fromClass: Tables::class
         )
     ],
+    paginationEnabled: false
 )]
 #[ORM\Entity(repositoryClass: GuestListRepository::class)]
 class GuestList
