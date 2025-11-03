@@ -38,4 +38,27 @@ class TablesCrudController extends AbstractCrudController
             ->setEntityLabelInSingular('стол')
             ->setEntityLabelInPlural('столы');
     }
+
+    public function deleteEntity(AdminContext|\Doctrine\ORM\EntityManagerInterface $entityManager, $entityInstance): void
+    {
+        if (count($entityInstance->getGuests()) > 0) {
+            $guestNames = [];
+            foreach ($entityInstance->getGuests() as $guest) {
+                $guestNames[] = $guest->getName();
+            }
+            $guestList = implode(', ', $guestNames);
+
+            $this->addFlash('error', sprintf(
+                'Невозможно удалить стол %d, т.к. за ним находятся гости: %s',
+                $entityInstance->getId(),
+                $guestList
+            ));
+
+            // Просто выходим, чтобы удаление не произошло
+            return;
+        }
+
+        // Если гостей нет — удаляем как обычно
+        parent::deleteEntity($entityManager, $entityInstance);
+    }
 }
