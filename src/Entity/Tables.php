@@ -9,7 +9,9 @@ use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
 use ApiPlatform\Metadata\Patch;
+use App\Dto\TablesStatsDto;
 use App\Repository\TablesRepository;
+use App\State\TablesStatsProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -20,6 +22,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
         new Get(),
         new GetCollection(),
         new Patch(),
+        new GetCollection(uriTemplate: 'tables_stats', output: TablesStatsDto::class, provider: TablesStatsProvider::class)
     ],
     normalizationContext: ['groups' => ['tables:read', 'guests:read']],
     denormalizationContext: ['groups' => ['tables:write']]
