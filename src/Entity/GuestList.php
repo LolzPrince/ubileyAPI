@@ -15,6 +15,7 @@ use ApiPlatform\OpenApi\Model\Operation;
 use App\Repository\GuestListRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Attribute\Groups;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ApiResource(
     operations: [
@@ -48,6 +49,17 @@ class GuestList
     #[ORM\Column(length: 255)]
     #[Groups(['guests:read', 'guests:write'])]
     #[ApiFilter(SearchFilter::class, strategy: 'partial')]
+    #[Assert\NotBlank(message: "Имя гостя обязательно")]
+    #[Assert\Length(
+        min: 2,
+        max: 255,
+        minMessage: "Имя должно содержать минимум 2 символа",
+        maxMessage: "Имя не должно превышать 255 символов"
+    )]
+    #[Assert\Regex(
+        pattern: "/^[a-zA-Zа-яА-ЯёЁ\s\-']+$/u",
+        message: "Имя может содержать только буквы, пробелы, дефисы и апострофы"
+    )]
     private ?string $name = null;
 
     #[ORM\Column(nullable: true)]
