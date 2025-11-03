@@ -15,6 +15,8 @@ use App\State\TablesStatsProvider;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ApiResource(
@@ -28,6 +30,7 @@ use Symfony\Component\Serializer\Attribute\Groups;
     denormalizationContext: ['groups' => ['tables:write']],
     paginationEnabled: false
 )]
+#[UniqueEntity(fields: ['num'], message: 'Это название уже занято')]
 #[ORM\Entity(repositoryClass: TablesRepository::class)]
 class Tables
 {
@@ -40,14 +43,25 @@ class Tables
     #[ORM\Column]
     #[Groups(['tables:read', 'guests:read', 'tables:write'])]
     #[ApiFilter(SearchFilter::class, strategy: 'exact')]
+    #[Assert\NotBlank(message: "Номер стола обязателен")]
+    #[Assert\Positive(message: "Номер стола должен быть положительным числом")]
     private ?int $num = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['tables:read', 'guests:read', 'tables:write'])]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: "Описание не должно превышать 255 символов"
+    )]
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['tables:read', 'guests:read', 'tables:write'])]
+    #[Assert\Positive(message: "Максимальное количество гостей должно быть положительным числом")]
+    #[Assert\LessThan(
+        value: 50,
+        message: "Стол не может вмещать более 50 гостей"
+    )]
     private ?int $maxGuests = null;
 
     /**
