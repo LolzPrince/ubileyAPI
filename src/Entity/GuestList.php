@@ -44,6 +44,7 @@ class GuestList
     #[ORM\ManyToOne(inversedBy: 'guests')]
     #[Groups(['guests:read', 'guests:write'])]
     #[ApiProperty(readableLink: true, writableLink: false)]
+    #[ORM\JoinColumn(name: 'tables_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
     private ?Tables $tables = null;
 
     public function getId(): ?int
