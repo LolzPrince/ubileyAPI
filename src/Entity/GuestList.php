@@ -71,6 +71,7 @@ class GuestList
     #[Groups(['guests:read', 'guests:write'])]
     #[ApiProperty(readableLink: true, writableLink: false)]
     #[ORM\JoinColumn(name: 'tables_id', referencedColumnName: 'id', onDelete: 'SET NULL')]
+    #[Assert\NotNull(message: "Стол должен быть указан")]
     private ?Tables $tables = null;
 
     public function getId(): ?int
