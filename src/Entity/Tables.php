@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
+use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
 use ApiPlatform\Metadata\GetCollection;
@@ -32,6 +35,7 @@ class Tables
 
     #[ORM\Column]
     #[Groups(['tables:read', 'guests:read', 'tables:write'])]
+    #[ApiFilter(SearchFilter::class, strategy: 'exact')]
     private ?int $num = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -47,6 +51,7 @@ class Tables
      */
     #[ORM\OneToMany(targetEntity: GuestList::class, mappedBy: 'tables')]
     #[Groups(['tables:read', 'guests:read'])]
+    #[ApiProperty(readableLink: false)]
     private Collection $guests;
 
     public function __construct()

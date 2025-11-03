@@ -2,6 +2,9 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Doctrine\Orm\Filter\BooleanFilter;
+use ApiPlatform\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Metadata\ApiFilter;
 use ApiPlatform\Metadata\ApiProperty;
 use ApiPlatform\Metadata\ApiResource;
 use ApiPlatform\Metadata\Get;
@@ -30,10 +33,12 @@ class GuestList
 
     #[ORM\Column(length: 255)]
     #[Groups(['guests:read', 'guests:write'])]
+    #[ApiFilter(SearchFilter::class, strategy: 'partial')]
     private ?string $name = null;
 
     #[ORM\Column(nullable: true)]
     #[Groups(['guests:read', 'guests:write'])]
+    #[ApiFilter(BooleanFilter::class)]
     private ?bool $isPresent = null;
 
     #[ORM\ManyToOne(inversedBy: 'guests')]
