@@ -2,32 +2,51 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use App\Repository\TablesRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
+#[ApiResource(
+    operations: [
+        new Get(),
+        new GetCollection(),
+        new Patch(),
+    ],
+    normalizationContext: ['groups' => ['tables:read', 'guests:read']],
+    denormalizationContext: ['groups' => ['tables:write']]
+)]
 #[ORM\Entity(repositoryClass: TablesRepository::class)]
 class Tables
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['tables:read', 'guests:read'])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['tables:read', 'guests:read', 'tables:write'])]
     private ?int $num = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['tables:read', 'guests:read', 'tables:write'])]
     private ?string $description = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['tables:read', 'guests:read', 'tables:write'])]
     private ?int $maxGuests = null;
 
     /**
      * @var Collection<int, GuestList>
      */
     #[ORM\OneToMany(targetEntity: GuestList::class, mappedBy: 'tables')]
+    #[Groups(['tables:read', 'guests:read'])]
     private Collection $guests;
 
     public function __construct()
@@ -105,11 +124,14 @@ class Tables
 
         return $this;
     }
+
+    #[Groups(['tables:read', 'guests:read'])]
     public function getGuestsDef(): ?int
     {
         return $this->guests->count();
     }
-i
+
+    #[Groups(['tables:read', 'guests:read'])]
     public function getGuestsNow(): ?int
     {
         return $this->guests->filter(function(GuestList $guest) {
