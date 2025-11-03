@@ -161,4 +161,8 @@ class Tables
             return $guest->getIsPresent();
         })->count();
     }
+    public function __toString(): string
+    {
+        return "Стол $this->num";
+    }
 }
