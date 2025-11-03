@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\TablesRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TablesRepository::class)]
@@ -21,6 +23,17 @@ class Tables
 
     #[ORM\Column(nullable: true)]
     private ?int $maxGuests = null;
+
+    /**
+     * @var Collection<int, GuestList>
+     */
+    #[ORM\OneToMany(targetEntity: GuestList::class, mappedBy: 'tables')]
+    private Collection $guests;
+
+    public function __construct()
+    {
+        $this->guests = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -59,6 +72,36 @@ class Tables
     public function setMaxGuests(?int $maxGuests): static
     {
         $this->maxGuests = $maxGuests;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, GuestList>
+     */
+    public function getGuests(): Collection
+    {
+        return $this->guests;
+    }
+
+    public function addGuest(GuestList $guest): static
+    {
+        if (!$this->guests->contains($guest)) {
+            $this->guests->add($guest);
+            $guest->setTables($this);
+        }
+
+        return $this;
+    }
+
+    public function removeGuest(GuestList $guest): static
+    {
+        if ($this->guests->removeElement($guest)) {
+            // set the owning side to null (unless already changed)
+            if ($guest->getTables() === $this) {
+                $guest->setTables(null);
+            }
+        }
 
         return $this;
     }
