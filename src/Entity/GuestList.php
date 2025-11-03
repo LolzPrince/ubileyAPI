@@ -2,24 +2,43 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Metadata\ApiProperty;
+use ApiPlatform\Metadata\ApiResource;
+use ApiPlatform\Metadata\Get;
+use ApiPlatform\Metadata\GetCollection;
+use ApiPlatform\Metadata\Patch;
 use App\Repository\GuestListRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Groups;
 
+#[ApiResource(
+    operations: [
+        new Get(),
+        new GetCollection(),
+        new Patch()],
+    normalizationContext: ['groups' => ['guests:read']],
+    denormalizationContext: ['groups' => ['guests:write']]
+)]
 #[ORM\Entity(repositoryClass: GuestListRepository::class)]
 class GuestList
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['guests:read'])]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['guests:read', 'guests:write'])]
     private ?string $name = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['guests:read', 'guests:write'])]
     private ?bool $isPresent = null;
 
     #[ORM\ManyToOne(inversedBy: 'guests')]
+    #[Groups(['guests:read', 'guests:write'])]
+    #[ApiProperty(readableLink: true, writableLink: false)]
     private ?Tables $tables = null;
 
     public function getId(): ?int
