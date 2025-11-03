@@ -105,4 +105,15 @@ class Tables
 
         return $this;
     }
+    public function getGuestsDef(): ?int
+    {
+        return $this->guests->count();
+    }
+i
+    public function getGuestsNow(): ?int
+    {
+        return $this->guests->filter(function(GuestList $guest) {
+            return $guest->getIsPresent();
+        })->count();
+    }
 }

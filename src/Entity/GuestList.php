@@ -39,7 +39,7 @@ class GuestList
         return $this;
     }
 
-    public function isPresent(): ?bool
+    public function getIsPresent(): ?bool
     {
         return $this->isPresent;
     }
