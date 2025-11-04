@@ -38,6 +38,7 @@ docker compose exec php php bin/console app:create-admin
 
 - API Platform: `http://localhost:8080/api`
 - Swagger UI: `http://localhost:8080/api/docs`
+- Prod URL(Версия на сервере): `http://176.124.217.174:8080`
 
 ## Дополнительные команды
 
